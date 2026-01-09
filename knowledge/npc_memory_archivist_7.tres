@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="NPCMemoryResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://knowledge/npc_memory_resource.gd" id="1_memory"]
+
+[resource]
+script = ExtResource("1_memory")
+beliefs = {
+1: 0.9,
+2: 0.85,
+3: 0.7,
+4: 0.95,
+5: 0.8,
+6: 0.75,
+7: 0.9,
+11: 1.0
+}
+misinformation = {}
+last_accessed = {}

@@ -1,0 +1,96 @@
+{
+	"neutral_explainer": {
+		"decisions": ["SHARE"],
+		"preamble": "I can tell you that",
+		"body": "{content}.",
+		"postamble": "",
+		"verbosity": "medium"
+	},
+	"direct_answer": {
+		"decisions": ["SHARE"],
+		"preamble": "",
+		"body": "{content}.",
+		"postamble": "",
+		"verbosity": "terse"
+	},
+	"structured_answer": {
+		"decisions": ["SHARE"],
+		"preamble": "Based on what I know:",
+		"body": "{content}.",
+		"postamble": "",
+		"verbosity": "medium",
+		"structured": true
+	},
+	"hedged_answer": {
+		"decisions": ["SHARE"],
+		"preamble": "If I recall correctly,",
+		"body": "{content}.",
+		"postamble": "Though I may be mistaken.",
+		"verbosity": "verbose",
+		"hedged": true
+	},
+	"polite_unknown": {
+		"decisions": ["REFUSE_UNKNOWN"],
+		"preamble": "I'm afraid",
+		"body": "I don't know about that.",
+		"postamble": "",
+		"verbosity": "medium"
+	},
+	"curt_unknown": {
+		"decisions": ["REFUSE_UNKNOWN"],
+		"preamble": "",
+		"body": "I don't know.",
+		"postamble": "",
+		"verbosity": "terse"
+	},
+	"polite_refusal": {
+		"decisions": ["REFUSE_FORBIDDEN"],
+		"preamble": "I'm not comfortable",
+		"body": "discussing that topic.",
+		"postamble": "",
+		"verbosity": "medium"
+	},
+	"llm_refusal": {
+		"decisions": ["REFUSE_FORBIDDEN"],
+		"preamble": "I'm not able to provide information on that topic",
+		"body": "due to the nature of my training.",
+		"postamble": "Is there something else I can help with?",
+		"verbosity": "verbose",
+		"structured": true
+	},
+	"gentle_deflect": {
+		"decisions": ["DEFLECT"],
+		"preamble": "That's an interesting question.",
+		"body": "Perhaps we could discuss something else?",
+		"postamble": "",
+		"verbosity": "medium"
+	},
+	"firm_pushback": {
+		"decisions": ["CHALLENGE_BACK"],
+		"preamble": "",
+		"body": "I don't respond well to that approach.",
+		"postamble": "",
+		"verbosity": "terse"
+	},
+	"simple_ack": {
+		"decisions": ["ACKNOWLEDGE"],
+		"preamble": "",
+		"body": "I understand.",
+		"postamble": "",
+		"verbosity": "terse"
+	},
+	"friendly_ack": {
+		"decisions": ["ACKNOWLEDGE"],
+		"preamble": "Of course.",
+		"body": "What would you like to know?",
+		"postamble": "",
+		"verbosity": "medium"
+	},
+	"greeting_ack": {
+		"decisions": ["ACKNOWLEDGE"],
+		"preamble": "Hello!",
+		"body": "How can I help you today?",
+		"postamble": "",
+		"verbosity": "medium"
+	}
+}

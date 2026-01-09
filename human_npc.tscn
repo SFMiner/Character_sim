@@ -1,0 +1,97 @@
+[gd_scene load_steps=6 format=3 uid="uid://d3bcgxllkhxi"]
+
+[ext_resource type="Script" uid="uid://ug1i2y34ai8y" path="res://ui/dialogue_ui.gd" id="1_ui"]
+[ext_resource type="Script" uid="uid://4ti116sywcys" path="res://dialogue/character_node.gd" id="2_char"]
+[ext_resource type="Script" uid="uid://bgvid2l4modv1" path="res://dialogue/character_profile.gd" id="3_profile"]
+[ext_resource type="Resource" uid="uid://dvhayh02bcaw4" path="res://knowledge/npc_memory_old_marcus.tres" id="4_memory"]
+
+[sub_resource type="Resource" id="Resource_profile"]
+script = ExtResource("3_profile")
+character_name = "Old Marcus"
+verbosity = "terse"
+hedge_intensity = 0.2
+forbidden_topics = Array[String](["king illness", "secret"])
+preferred_skeletons = Array[String](["direct_answer", "curt_unknown"])
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ui")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.15, 0.12, 0.1, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="CharacterLabel" type="Label" parent="VBoxContainer/HeaderContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+text = "Talking to: Old Marcus (human)"
+
+[node name="TurnLabel" type="Label" parent="VBoxContainer/HeaderContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Turn: 0"
+
+[node name="OutputDisplay" type="RichTextLabel" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 2
+bbcode_enabled = true
+scroll_following = true
+selection_enabled = true
+
+[node name="DebugPanel" type="RichTextLabel" parent="VBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+bbcode_enabled = true
+
+[node name="InputContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="InputField" type="LineEdit" parent="VBoxContainer/InputContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Type your message here..."
+
+[node name="SubmitButton" type="Button" parent="VBoxContainer/InputContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Submit"
+
+[node name="DebugToggle" type="Button" parent="VBoxContainer/InputContainer"]
+layout_mode = 2
+text = "Debug"
+
+[node name="CharacterNode" type="Node" parent="."]
+script = ExtResource("2_char")
+profile = SubResource("Resource_profile")
+initial_memory = ExtResource("4_memory")
+
+[connection signal="pressed" from="VBoxContainer/InputContainer/DebugToggle" to="." method="toggle_debug"]

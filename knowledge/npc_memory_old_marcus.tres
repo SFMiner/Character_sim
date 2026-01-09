@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="NPCMemoryResource" load_steps=2 format=3 uid="uid://dvhayh02bcaw4"]
+
+[ext_resource type="Script" uid="uid://boe4uis5rsox6" path="res://knowledge/npc_memory_resource.gd" id="1_memory"]
+
+[resource]
+script = ExtResource("1_memory")
+beliefs = {
+1: 0.95,
+2: 0.9,
+4: 0.8,
+7: 0.7,
+10: 1.0,
+12: 0.7,
+19: 0.9
+}
+misinformation = {
+4: "the King | is named | Aldric the Wise"
+}
