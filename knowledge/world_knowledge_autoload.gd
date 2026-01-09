@@ -141,6 +141,51 @@ func _populate_default_facts() -> void:
 	goblin_scouts.raw_content = "Goblin scouts | have been spotted near | the western farms"
 	knowledge.facts[19] = goblin_scouts
 	
+	var village_marsh_edge: FactResource = FactResource.new()
+	village_marsh_edge.fact_id = 20
+	village_marsh_edge.tags = ["village", "geography", "local"]
+	village_marsh_edge.raw_content = "The village | stands where | marsh hardens into usable ground"
+	knowledge.facts[20] = village_marsh_edge
+
+
+	var river_changes_course: FactResource = FactResource.new()
+	river_changes_course.fact_id = 21
+	river_changes_course.tags = ["river", "geography", "local"]
+	river_changes_course.raw_content = "The river | changes its course | after hard winters"
+	knowledge.facts[21] = river_changes_course
+
+
+	var ancient_road: FactResource = FactResource.new()
+	ancient_road.fact_id = 22
+	ancient_road.tags = ["road", "history", "local"]
+	ancient_road.raw_content = "The main road | is older than | the village itself"
+	knowledge.facts[22] = ancient_road
+
+
+	# --- Local history ---
+
+	var north_end_fire: FactResource = FactResource.new()
+	north_end_fire.fact_id = 23
+	north_end_fire.tags = ["history", "village", "disaster"]
+	north_end_fire.raw_content = "A fire | once destroyed | the north end of the village"
+	knowledge.facts[23] = north_end_fire
+
+
+	# --- Customs & social norms ---
+
+	var guests_fed_first: FactResource = FactResource.new()
+	guests_fed_first.fact_id = 24
+	guests_fed_first.tags = ["custom", "hospitality", "social"]
+	guests_fed_first.raw_content = "Guests | are fed before | they are questioned"
+	knowledge.facts[24] = guests_fed_first
+
+
+	var elders_memory_role: FactResource = FactResource.new()
+	elders_memory_role.fact_id = 25
+	elders_memory_role.tags = ["elders", "custom", "authority"]
+	elders_memory_role.raw_content = "Elders | are valued for | memory rather than authority"
+	knowledge.facts[25] = elders_memory_role
+
 	# === NPC IDENTITY FACTS ===
 	
 	# Old Marcus identity
