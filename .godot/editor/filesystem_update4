@@ -1,7 +1,0 @@
-res://knowledge/knowledge_adapter.gd
-res://dialogue/dialogue_manager.gd
-res://knowledge/world_knowledge_autoload.gd
-res://human_npc.tscn
-res://dialogue/character_node.gd
-res://knowledge/npc_memory_old_marcus.tres
-res://ui/dialogue_ui.gd

@@ -1,7 +1,7 @@
 # character_node.gd
 # Main NPC node. Owns state, delegates dialogue to manager.
 # Attach this to a Node in your scene for each NPC.
-class_name CharacterNode
+class_name CharacterNodeClass
 extends Node
 
 ## Character profile resource (static definition)
