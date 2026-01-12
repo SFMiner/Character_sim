@@ -14,3 +14,7 @@ res://knowledge/world_knowledge_autoload.gd
 res://knowledge/knowledge_loader.gd
 res://data/entities.json
 res://data/knowledge_scopes.json
+res://data/facts.json
+res://dialogue/npc_state.gd
+res://knowledge/entity_resolver.gd
+res://knowledge/npc_memory_old_marcus.tres

@@ -47,12 +47,38 @@ func process(input: String, profile: CharacterProfile, state: NPCState) -> Strin
 	
 	# === STEP 3: Query knowledge (if subject exists) ===
 	var belief: Dictionary = {"found": false, "content": "", "confidence": 0.0}
-	if not subject.is_empty():
-		belief = knowledge_adapter.query_belief(subject, state.memory)
-		print("[DialogueManager] belief found=", belief.found, " content=", belief.content)
-		# Update recent subjects (but not for self-reference)
-		if subject != profile.character_name.to_lower():
-			state.add_subject(subject)
+	if not state.pending_disambiguation.is_empty():
+		var prior_options: Array = state.pending_disambiguation.get("match_entity_ids", [])
+		var resolved: Dictionary = knowledge_adapter.resolve_disambiguation(input, state.memory, state)
+		if resolved.get("found", false):
+			state.pending_disambiguation.clear()
+			if not prior_options.is_empty():
+				state.focus_entities = prior_options
+			belief = resolved
+			subject = resolved.get("resolved_entity", subject)
+			speech_act = SpeechActInterpreter.SpeechAct.ASK_ABOUT
+			if not subject.is_empty() and subject != profile.character_name.to_lower():
+				state.add_subject(subject)
+		else:
+			if not subject.is_empty():
+				belief = knowledge_adapter.query_belief(subject, state.memory, state)
+	else:
+		if not subject.is_empty():
+			belief = knowledge_adapter.query_belief(subject, state.memory, state)
+	
+	print("[DialogueManager] belief found=", belief.found, " content=", belief.content)
+	if belief.get("requires_disambiguation", false):
+		state.pending_disambiguation = belief
+		state.focus_entities = belief.get("match_entity_ids", [])
+		state.turn_count += 1
+		state.add_response(belief.content)
+		return belief.content
+	
+	# Update recent subjects (but not for self-reference)
+	if belief.found and subject != profile.character_name.to_lower():
+		state.add_subject(subject)
+		if not state.focus_entities.is_empty() and subject not in state.focus_entities:
+			state.focus_entities.clear()
 	
 	# === STEP 4: Decide what to do ===
 	var decision_result: Dictionary = decision_gate.decide(
@@ -116,7 +142,7 @@ func get_debug_info(input: String, profile: CharacterProfile, state: NPCState) -
 	
 	var belief: Dictionary = {"found": false, "content": "", "confidence": 0.0}
 	if not subject.is_empty():
-		belief = knowledge_adapter.query_belief(subject, state.memory)
+		belief = knowledge_adapter.query_belief(subject, state.memory, state)
 	
 	var decision_result: Dictionary = decision_gate.decide(
 		classification.speech_act,
@@ -134,6 +160,7 @@ func get_debug_info(input: String, profile: CharacterProfile, state: NPCState) -
 		"has_knowledge": belief.found,
 		"belief_content": belief.content,
 		"belief_confidence": belief.confidence,
+		"requires_disambiguation": belief.get("requires_disambiguation", false),
 		"decision": DecisionGate.Decision.keys()[decision_result.decision],
 		"decision_reason": decision_result.reason,
 		"turn_count": state.turn_count,

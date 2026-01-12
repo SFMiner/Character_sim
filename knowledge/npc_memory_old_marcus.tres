@@ -17,7 +17,10 @@ beliefs = {
 22: 0.85,
 23: 0.8,
 24: 0.9,
-25: 0.85
+25: 0.85,
+26: 0.9,
+27: 0.85,
+28: 0.85
 }
 misinformation = {
 4: "the King | is named | Aldric the Wise"

@@ -20,6 +20,8 @@ var memory: NPCMemoryResource
 var turn_count: int = 0
 var recent_subjects: Array[String] = []  # Max 5, most recent first
 var recent_responses: Array[String] = []  # Max 5, for anti-repetition
+var pending_disambiguation: Dictionary = {}
+var focus_entities: Array[String] = []
 
 ## Location and time tracking
 var current_location: String = ""   # Entity ID where NPC currently is

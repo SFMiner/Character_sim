@@ -8,6 +8,7 @@ extends RefCounted
 var world: WorldKnowledgeResource
 var entities: Dictionary = {}
 var entity_facts_index: Dictionary = {}
+var resolver: EntityResolver = EntityResolver.new()
 
 
 func _init(world_knowledge: WorldKnowledgeResource) -> void:
@@ -34,7 +35,7 @@ func _build_indices() -> void:
 ## Core query: what does this NPC believe about a subject?
 ## Returns Dictionary with "content" (String) and "confidence" (float)
 ## EXTENSION POINT: Add "source", "granularity", "is_secret" to result
-func query_belief(subject: String, memory: NPCMemoryResource) -> Dictionary:
+func query_belief(subject: String, memory: NPCMemoryResource, npc_state: NPCState = null) -> Dictionary:
 	print("[KnowledgeAdapter] query_belief subject=", subject)
 	var result: Dictionary = {
 		"found": false,
@@ -47,83 +48,74 @@ func query_belief(subject: String, memory: NPCMemoryResource) -> Dictionary:
 		# "has_prerequisites_met": true,
 	}
 	
-	# Find facts matching subject
-	var matching_facts: Array[FactResource] = _find_facts_by_subject(subject)
-	print("[KnowledgeAdapter] matching_facts size=", matching_facts.size())
-	if matching_facts.is_empty():
+	var context: Dictionary = {}
+	if npc_state:
+		context["npc_location"] = npc_state.current_location
+		context["recent_subjects"] = npc_state.recent_subjects
+		context["npc_beliefs"] = memory.beliefs
+		context["entity_facts_index"] = entity_facts_index
+		context["focus_entities"] = npc_state.focus_entities
+	
+	var matches: Array[EntityResolver.EntityMatch] = resolver.resolve_entity_smart(
+		subject,
+		entities,
+		context
+	)
+	
+	if matches.is_empty():
+		var matching_facts: Array[FactResource] = _find_facts_by_tags(subject)
+		return _pick_belief_from_facts(matching_facts, memory, result)
+	
+	if matches.size() > 1 and matches[0].confidence - matches[1].confidence < 20:
+		return _handle_ambiguity(matches)
+	
+	return _query_entity_facts(matches[0].entity_id, memory, result)
+
+
+func resolve_disambiguation(input: String, memory: NPCMemoryResource, npc_state: NPCState) -> Dictionary:
+	var pending: Dictionary = npc_state.pending_disambiguation
+	if pending.is_empty():
+		return {"found": false}
+	
+	var options: Array = pending.get("match_entity_ids", [])
+	if options.is_empty():
+		return {"found": false}
+	
+	var context: Dictionary = {
+		"npc_location": npc_state.current_location,
+		"recent_subjects": npc_state.recent_subjects,
+		"npc_beliefs": memory.beliefs,
+		"entity_facts_index": entity_facts_index
+	}
+	
+	var matches: Array[EntityResolver.EntityMatch] = resolver.resolve_entity_smart(
+		input,
+		entities,
+		context
+	)
+	
+	for match in matches:
+		if match.entity_id in options:
+			var result := _query_entity_facts(match.entity_id, memory, {"found": false, "content": "", "confidence": 0.0})
+			result["resolved_entity"] = match.entity_id
+			return result
+	
+	return {"found": false}
+
+
+func _query_entity_facts(entity_id: String, memory: NPCMemoryResource, result: Dictionary) -> Dictionary:
+	var fact_ids: Array = entity_facts_index.get(entity_id, [])
+	if fact_ids.is_empty():
 		return result
 	
-	# Check NPC's beliefs about these facts
-	for fact in matching_facts:
-		if not memory.beliefs.has(fact.fact_id):
-			continue
-		
-		var confidence: float = memory.beliefs[fact.fact_id]
-		if confidence <= 0.0:
-			continue
-		
-		# Check for misinformation - belief overrides truth
-		var content: String
-		if memory.misinformation.has(fact.fact_id):
-			content = memory.misinformation[fact.fact_id]
-		else:
-			content = fact.raw_content
-		
-		# Update last accessed (lazy decay prep)
-		memory.last_accessed[fact.fact_id] = Time.get_unix_time_from_system()
-		
-		# Return first valid belief
-		# EXTENSION POINT: Return best match based on confidence/recency
-		result.found = true
-		result.content = content
-		result.confidence = confidence
-		print("[KnowledgeAdapter] matched fact_id=", fact.fact_id, " confidence=", confidence)
-		return result
+	var matching_facts: Array[FactResource] = []
+	for fact_id in fact_ids:
+		if world.facts.has(fact_id):
+			matching_facts.append(world.facts[fact_id])
 	
-	return result
-
-
-func _find_facts_by_subject(subject: String) -> Array[FactResource]:
-	var results: Array[FactResource] = []
-	
-	var entity_id := resolve_entity(subject)
-	if not entity_id.is_empty():
-		var fact_ids: Array = entity_facts_index.get(entity_id, [])
-		for fact_id in fact_ids:
-			if world.facts.has(fact_id):
-				results.append(world.facts[fact_id])
-		if not results.is_empty():
-			return results
-	
-	return _find_facts_by_tags(subject)
-
-
-func resolve_entity(query: String) -> String:
-	var search := query.to_lower().strip_edges()
-	if search.is_empty():
-		return ""
-	
-	if entities.has(search):
-		return search
-	
-	for entity_id in entities:
-		var entity: Dictionary = entities[entity_id]
-		if entity.get("display", "").to_lower() == search:
-			return entity_id
-	
-	for entity_id in entities:
-		var entity: Dictionary = entities[entity_id]
-		var aliases: Array = entity.get("aliases", [])
-		for alias in aliases:
-			if alias.to_lower() == search:
-				return entity_id
-	
-	for entity_id in entities:
-		var entity: Dictionary = entities[entity_id]
-		if search in entity.get("display", "").to_lower():
-			return entity_id
-	
-	return ""
+	var resolved := _pick_belief_from_facts(matching_facts, memory, result)
+	resolved["resolved_entity"] = entity_id
+	return resolved
 
 
 func _parse_fact_entities(fact: FactResource) -> Array[String]:
@@ -144,7 +136,7 @@ func _parse_fact_entities(fact: FactResource) -> Array[String]:
 		if display.length() >= 3 and display in content:
 			found.append(entity_id)
 			continue
-		for alias in entity.get("aliases", []):
+		for alias in _get_entity_aliases(entity):
 			if alias.to_lower() in content:
 				if entity_id not in found:
 					found.append(entity_id)
@@ -187,6 +179,75 @@ func _find_facts_by_tags(subject: String) -> Array[FactResource]:
 			results.append(fact)
 	
 	return results
+
+
+func _pick_belief_from_facts(
+	matching_facts: Array[FactResource],
+	memory: NPCMemoryResource,
+	result: Dictionary
+) -> Dictionary:
+	print("[KnowledgeAdapter] matching_facts size=", matching_facts.size())
+	if matching_facts.is_empty():
+		return result
+	
+	for fact in matching_facts:
+		if not memory.beliefs.has(fact.fact_id):
+			continue
+		
+		var confidence: float = memory.beliefs[fact.fact_id]
+		if confidence <= 0.0:
+			continue
+		
+		var content: String
+		if memory.misinformation.has(fact.fact_id):
+			content = memory.misinformation[fact.fact_id]
+		else:
+			content = fact.raw_content
+		
+		memory.last_accessed[fact.fact_id] = Time.get_unix_time_from_system()
+		
+		result.found = true
+		result.content = content
+		result.confidence = confidence
+		print("[KnowledgeAdapter] matched fact_id=", fact.fact_id, " confidence=", confidence)
+		return result
+	
+	return result
+
+
+func _handle_ambiguity(matches: Array[EntityResolver.EntityMatch]) -> Dictionary:
+	var unique: Dictionary = {}
+	for match_entity in matches:
+		var entity_id := match_entity.entity_id
+		if not unique.has(entity_id) or match_entity.confidence > unique[entity_id].confidence:
+			unique[entity_id] = match_entity
+	
+	var unique_matches: Array = unique.values()
+	unique_matches.sort_custom(func(a, b): return a.confidence > b.confidence)
+	
+	var options: Array[String] = []
+	var entity_ids: Array[String] = []
+	for match_entity in unique_matches:
+		var entity: Dictionary = entities.get(match_entity.entity_id, {})
+		options.append(entity.get("display", match_entity.entity_id))
+		entity_ids.append(match_entity.entity_id)
+	
+	return {
+		"found": false,
+		"content": "Which one do you mean: %s?" % ", ".join(options),
+		"confidence": 0.0,
+		"requires_disambiguation": true,
+		"options": options,
+		"match_entity_ids": entity_ids
+	}
+
+
+func _get_entity_aliases(entity: Dictionary) -> Array:
+	var aliases: Array = []
+	aliases.append_array(entity.get("primary_aliases", []))
+	aliases.append_array(entity.get("qualified_aliases", []))
+	aliases.append_array(entity.get("ambiguous_aliases", []))
+	return aliases
 
 
 ## Check if two strings match (exact or fuzzy within edit distance)

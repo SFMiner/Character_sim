@@ -1,181 +1,512 @@
 {
-  "meta": { "version": "1.0" },
+  "meta": {
+	"version": "1.0"
+  },
   "entities": {
-	"blacksmith": {
-	  "type": "person",
-	  "subtype": "occupation",
-	  "display": "the blacksmith",
-	  "aliases": ["blacksmith", "smith", "forge", "blacksmith shop"]
-	},
 	"market_district": {
 	  "type": "location",
 	  "display": "the Market District",
-	  "aliases": ["market district", "market"]
+	  "primary_aliases": [
+		"market district",
+        "market"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"rusty_sword_tavern": {
 	  "type": "location",
 	  "display": "The Rusty Sword tavern",
-	  "aliases": ["rusty sword", "tavern"]
+	  "primary_aliases": [
+		"rusty sword",
+        "tavern"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"city_gates": {
 	  "type": "location",
 	  "display": "the city gates",
-	  "aliases": ["gates", "city gates"]
+	  "primary_aliases": [
+		"gates",
+        "city gates"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"temple_of_dawn": {
 	  "type": "location",
 	  "display": "the Temple of Dawn",
-	  "aliases": ["temple of dawn", "temple"]
+	  "primary_aliases": [
+		"temple of dawn",
+        "temple"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"eastern_hill": {
 	  "type": "location",
 	  "display": "the eastern hill",
-	  "aliases": ["eastern hill", "hill"]
+	  "primary_aliases": [
+		"eastern hill",
+        "hill"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"king_aldric": {
 	  "type": "person",
 	  "display": "the King",
-	  "aliases": ["king", "aldric", "aldric iii"]
+	  "primary_aliases": [
+		"king",
+		"aldric",
+        "aldric iii"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"captain_of_guard": {
 	  "type": "person",
 	  "display": "the Captain of the Guard",
-	  "aliases": ["captain", "captain of the guard", "guard captain"]
+	  "primary_aliases": [
+		"captain",
+		"captain of the guard",
+        "guard captain"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"helena_ironhand": {
 	  "type": "person",
 	  "display": "Helena Ironhand",
-	  "aliases": ["helena", "ironhand"]
+	  "primary_aliases": [
+		"helena",
+        "ironhand"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"merchant_guild": {
 	  "type": "organization",
 	  "display": "the Merchant Guild",
-	  "aliases": ["merchant guild", "guild"]
+	  "primary_aliases": [
+		"merchant guild",
+        "guild"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"master_tobias": {
 	  "type": "person",
 	  "display": "Master Tobias",
-	  "aliases": ["tobias"]
+	  "primary_aliases": [
+        "tobias"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"great_war": {
 	  "type": "event",
 	  "display": "The Great War",
-	  "aliases": ["great war", "war"]
+	  "primary_aliases": [
+		"great war",
+        "war"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"last_dragon": {
 	  "type": "creature",
 	  "display": "the last dragon",
-	  "aliases": ["dragon"]
+	  "primary_aliases": [
+        "dragon"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"first_king": {
 	  "type": "person",
 	  "display": "the First King",
-	  "aliases": ["first king"]
+	  "primary_aliases": [
+        "first king"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"whispering_woods": {
 	  "type": "location",
 	  "display": "the Whispering Woods",
-	  "aliases": ["whispering woods", "woods"]
+	  "primary_aliases": [
+		"whispering woods",
+        "woods"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"city": {
 	  "type": "location",
 	  "display": "the city",
-	  "aliases": ["city"]
+	  "primary_aliases": [
+        "city"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"gold_crowns": {
 	  "type": "object",
 	  "display": "Gold Crowns",
-	  "aliases": ["gold crowns", "currency", "gold"]
+	  "primary_aliases": [
+		"gold crowns",
+		"currency",
+        "gold"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"deep_iron_mine": {
 	  "type": "location",
 	  "display": "the Deep-Iron Mine",
-	  "aliases": ["deep-iron mine", "iron mine"]
+	  "primary_aliases": [
+		"deep-iron mine",
+        "iron mine"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"archmage_thalric": {
 	  "type": "person",
 	  "display": "Archmage Thalric",
-	  "aliases": ["archmage", "thalric"]
+	  "primary_aliases": [
+		"archmage",
+        "thalric"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"academy_unseen_arts": {
 	  "type": "organization",
 	  "display": "the Academy of Unseen Arts",
-	  "aliases": ["academy", "academy of unseen arts"]
+	  "primary_aliases": [
+		"academy",
+        "academy of unseen arts"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"thieves_guild": {
 	  "type": "organization",
 	  "display": "the Thieves Guild",
-	  "aliases": ["thieves guild"]
+	  "primary_aliases": [
+        "thieves guild"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"sewers_beneath_fountain": {
 	  "type": "location",
 	  "display": "the sewers beneath the fountain",
-	  "aliases": ["sewers", "fountain sewers"]
+	  "primary_aliases": [
+		"sewers",
+        "fountain sewers"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"moon_shard": {
 	  "type": "object",
 	  "display": "the Moon Shard",
-	  "aliases": ["moon shard", "shard"]
+	  "primary_aliases": [
+		"moon shard",
+        "shard"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"kings_private_vault": {
 	  "type": "location",
 	  "display": "the King's private vault",
-	  "aliases": ["king's vault", "private vault"]
+	  "primary_aliases": [
+		"king's vault",
+        "private vault"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"goblin_scouts": {
 	  "type": "creature",
 	  "display": "Goblin scouts",
-	  "aliases": ["goblins", "goblin scouts"]
+	  "primary_aliases": [
+		"goblins",
+        "goblin scouts"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"western_farms": {
 	  "type": "location",
 	  "display": "the western farms",
-	  "aliases": ["western farms", "farms"]
+	  "primary_aliases": [
+		"western farms",
+        "farms"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"village": {
 	  "type": "location",
 	  "display": "The village",
-	  "aliases": ["village"]
+	  "primary_aliases": [
+        "village"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"river": {
 	  "type": "location",
 	  "display": "The river",
-	  "aliases": ["river"]
+	  "primary_aliases": [
+        "river"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"main_road": {
 	  "type": "location",
 	  "display": "The main road",
-	  "aliases": ["main road", "road"]
+	  "primary_aliases": [
+		"main road",
+        "road"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"north_end_village": {
 	  "type": "location",
 	  "display": "the north end of the village",
-	  "aliases": ["north end", "north end of the village"]
+	  "primary_aliases": [
+		"north end",
+        "north end of the village"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"north_end_fire": {
 	  "type": "event",
 	  "display": "A fire",
-	  "aliases": ["fire"]
+	  "primary_aliases": [
+        "fire"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"guests": {
 	  "type": "concept",
 	  "display": "Guests",
-	  "aliases": ["guests"]
+	  "primary_aliases": [
+        "guests"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"elders": {
 	  "type": "person",
 	  "display": "Elders",
-	  "aliases": ["elders"]
+	  "primary_aliases": [
+        "elders"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"archivist_7": {
 	  "type": "person",
 	  "display": "I",
-	  "aliases": ["archivist-7", "archivist", "archivist 7"]
+	  "primary_aliases": [
+		"archivist-7",
+		"archivist",
+        "archivist 7"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
 	},
 	"old_marcus": {
 	  "type": "person",
 	  "display": "I",
-	  "aliases": ["old marcus", "marcus"]
+	  "primary_aliases": [
+		"old marcus",
+        "marcus"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
+	},
+	"forge_quarter": {
+	  "type": "location",
+	  "display": "the Forge Quarter",
+	  "primary_aliases": [
+        "forge quarter"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
+	},
+	"west_market": {
+	  "type": "location",
+	  "display": "the West Market",
+	  "primary_aliases": [
+        "west market"
+	  ],
+	  "qualified_aliases": [],
+	  "ambiguous_aliases": [],
+	  "parent_concept": "",
+	  "location": ""
+	},
+	"blacksmith_forge_quarter": {
+	  "type": "person",
+	  "subtype": "occupation",
+	  "display": "Gregor the blacksmith",
+	  "primary_aliases": [
+		"gregor",
+        "gregor the blacksmith"
+	  ],
+	  "qualified_aliases": [
+		"forge quarter blacksmith",
+		"blacksmith in forge quarter",
+        "the blacksmith near the foundry"
+	  ],
+	  "ambiguous_aliases": [
+		"blacksmith",
+        "smith"
+	  ],
+	  "parent_concept": "",
+	  "location": "forge_quarter"
+	},
+	"blacksmith_west_market": {
+	  "type": "person",
+	  "subtype": "occupation",
+	  "display": "Elena the blacksmith",
+	  "primary_aliases": [
+		"elena",
+        "elena the blacksmith"
+	  ],
+	  "qualified_aliases": [
+		"west market blacksmith",
+		"blacksmith in west market",
+		"the blacksmith by the fountain",
+		"market blacksmith",
+		"blacksmith in the market",
+        "the blacksmith in the market"
+	  ],
+	  "ambiguous_aliases": [
+		"blacksmith",
+        "smith"
+	  ],
+	  "parent_concept": "",
+	  "location": "west_market"
+	},
+	"gregor_merchant": {
+	  "type": "person",
+	  "subtype": "merchant",
+	  "display": "Gregor the merchant",
+	  "primary_aliases": [
+		"gregor",
+        "gregor the merchant"
+	  ],
+	  "qualified_aliases": [
+		"market merchant",
+		"merchant in the market",
+        "gregor in the market"
+	  ],
+	  "ambiguous_aliases": [
+        "merchant"
+	  ],
+	  "parent_concept": "",
+	  "location": "market_district"
+	},
+	"elena_merchant": {
+	  "type": "person",
+	  "subtype": "merchant",
+	  "display": "Elena the merchant",
+	  "primary_aliases": [
+		"elena",
+        "elena the merchant"
+	  ],
+	  "qualified_aliases": [
+		"west market merchant",
+		"merchant in west market",
+        "elena in west market"
+	  ],
+	  "ambiguous_aliases": [
+        "merchant"
+	  ],
+	  "parent_concept": "",
+	  "location": "west_market"
 	}
   }
 }

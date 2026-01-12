@@ -103,7 +103,10 @@ func resolve_entity(query: String) -> String:
 	
 	for entity_id in entities:
 		var entity: Dictionary = entities[entity_id]
-		var aliases: Array = entity.get("aliases", [])
+		var aliases: Array = []
+		aliases.append_array(entity.get("primary_aliases", []))
+		aliases.append_array(entity.get("qualified_aliases", []))
+		aliases.append_array(entity.get("ambiguous_aliases", []))
 		for alias in aliases:
 			if alias.to_lower() == search:
 				return entity_id
