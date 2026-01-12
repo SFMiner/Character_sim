@@ -17,6 +17,8 @@ func _init(world_knowledge: WorldKnowledgeResource, skeleton_data: Dictionary = 
 	interpreter = SpeechActInterpreter.new()
 	context_resolver = ContextState.new()
 	knowledge_adapter = KnowledgeAdapter.new(world_knowledge)
+	if WorldKnowledge and WorldKnowledge.has_method("get_entities"):
+		knowledge_adapter.set_entities(WorldKnowledge.get_entities())
 	decision_gate = DecisionGate.new()
 	skeleton_engine = SkeletonEngine.new(skeleton_data)
 	rewriter = TemplateRewriter.new()

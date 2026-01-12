@@ -1,0 +1,322 @@
+## Phase 1: Learning Mechanism - Proposed Changes
+
+### File 1: `knowledge/npc_memory_resource.gd`
+
+**Add:**
+
+gdscript
+
+```gdscript
+## fact_id (int) -> source_info (Dictionary)
+## source_info = {type: SourceType, source_id: String, generation: int, 
+##                learned_at: float, reinforcements: int}
+@export var sources: Dictionary = {}
+```
+
+---
+
+### File 2: `dialogue/npc_state.gd`
+
+**Add enum:**
+
+gdscript
+
+```gdscript
+enum SourceType {
+	INNATE,         # From initial seeding
+	WITNESSED,      # Saw it happen
+	TOLD,           # Someone told them
+	ENVIRONMENTAL,  # Absorbed from being somewhere
+	RUMOR,          # Overheard, low confidence
+}
+```
+
+**Add properties:**
+
+gdscript
+
+```gdscript
+## Location and time tracking
+var current_location: String = ""   # Entity ID
+var time_at_location: float = 0.0   # Days spent here
+var home_location: String = ""      # Where they return to
+
+## Learning traits (defaults, can be overridden by profile)
+var curiosity: float = 0.5          # Passive learning rate
+var trust_default: float = 0.5      # Trust for strangers
+var trust_levels: Dictionary = {}   # entity_id -> float
+```
+
+**Add functions:**
+
+gdscript
+
+```gdscript
+func learn_fact(fact_id: int, strength: float, source_type: SourceType,
+				source_id: String = "", generation: int = 0) -> bool
+
+func get_trust(entity_id: String) -> float
+
+func reinforce_fact(fact_id: int, amount: float = 0.1) -> void
+```
+
+---
+
+### File 3: `dialogue/character_profile.gd`
+
+**Enable curiosity trait** (uncomment and use):
+
+gdscript
+
+```gdscript
+@export var curiosity: float = 0.5  # 0.0 to 1.0, affects learning rate
+```
+
+---
+
+### File 4: `dialogue/character_node.gd`
+
+**Add public learning API:**
+
+gdscript
+
+```gdscript
+## Tell this NPC a fact (social learning)
+func tell_fact(fact_id: int, speaker_id: String, 
+			   speaker_confidence: float = 0.8, generation: int = 0) -> bool
+
+## NPC witnesses an event
+func witness_fact(fact_id: int, clarity: float = 1.0) -> bool
+
+## Set NPC's current location
+func set_location(location_id: String) -> void
+
+## Process passive learning (call periodically)
+func process_environmental_learning(delta_days: float) -> void
+```
+
+---
+
+### File 5: New file `knowledge/learning_system.gd`
+
+Centralized learning logic that can be shared:
+
+gdscript
+
+```gdscript
+class_name LearningSystem
+extends RefCounted
+
+static func calculate_social_learning_strength(
+    trust: float, 
+    speaker_confidence: float, 
+    generation: int
+) -> float
+
+static func calculate_hearsay_penalty(generation: int) -> float
+
+static func format_source_attribution(source_info: Dictionary) -> String
+```
+
+---
+
+Does this breakdown look correct before I implement?
+
+## Phase 2A Implementation Task for Coding Agent
+
+---
+
+### Objective
+
+Migrate the 25 hardcoded facts from `knowledge/world_knowledge_autoload.gd` to a JSON-based entity-relationship format. Create loader code that populates the existing `WorldKnowledgeResource` at runtime.
+
+---
+
+### Files to Create
+
+|File|Purpose|
+|---|---|
+|`data/entities.json`|Entity registry - all named things|
+|`data/facts.json`|Facts as entity-predicate-object triples|
+|`knowledge/knowledge_loader.gd`|Loads JSON, populates WorldKnowledgeResource|
+
+---
+
+### Schema: entities.json
+
+json
+
+```json
+{
+  "meta": { "version": "1.0" },
+  "entities": {
+    "entity_id": {
+      "type": "location|person|organization|event|creature|object|concept",
+      "subtype": "optional string",
+      "display": "Human-readable name",
+      "aliases": ["optional", "search", "terms"]
+    }
+  }
+}
+```
+
+**Requirements:**
+
+- Extract every distinct noun from the 25 facts in `_populate_default_facts()`
+- Assign stable snake_case IDs (e.g., `king_aldric`, `rusty_sword_tavern`)
+- Include `aliases` for fuzzy matching (e.g., `"king"` → `king_aldric`)
+
+---
+
+### Schema: facts.json
+
+json
+
+```json
+{
+  "meta": { "version": "1.0" },
+  "predicates": {
+    "predicate_name": {
+      "domain": ["valid subject types"],
+      "range": ["valid object types or _literal"]
+    }
+  },
+  "facts": {
+    "1": {
+      "subject": "entity_id",
+      "predicate": "predicate_name",
+      "object": "entity_id",
+      "object_literal": "string value if no entity",
+      "tags": ["array", "of", "strings"],
+      "access": "public|local|secret|rumor|self_only",
+      "requires_trust": 0.0,
+      "owner": "entity_id if self_only"
+    }
+  }
+}
+```
+
+**Rules:**
+
+- Use `object` for entity references, `object_literal` for raw strings - never both
+- Preserve existing `fact_id` values (1-25) for compatibility with `.tres` files
+- Map existing tags from the GDScript to the `tags` array
+- Infer `access` level from tag patterns:
+    - `"secret"` tag → `access: "secret"`
+    - `"rumor"` tag → `access: "rumor"`
+    - `"local"` tag → `access: "local"`
+    - `"identity"` + `"self"` tags → `access: "self_only"`, set `owner`
+    - Everything else → `access: "public"`
+
+---
+
+### knowledge_loader.gd
+
+Create `knowledge/knowledge_loader.gd` as a `RefCounted` class:
+
+gdscript
+
+```gdscript
+class_name KnowledgeLoader
+extends RefCounted
+
+var entities: Dictionary = {}
+var predicates: Dictionary = {}
+
+func load_all() -> Dictionary:
+    # Returns { "entities": Dictionary, "facts": Array[FactResource] }
+    pass
+
+func load_entities(path: String) -> Dictionary:
+    # Load and parse data/entities.json
+    # Store in self.entities for alias lookups
+    pass
+
+func load_facts(path: String) -> Array[FactResource]:
+    # Load and parse data/facts.json
+    # Convert each fact entry to a FactResource
+    # Generate raw_content from subject/predicate/object using entity display names
+    pass
+
+func resolve_entity(query: String) -> String:
+    # Given a search term, return entity_id
+    # Check: exact match on id, then display, then aliases
+    pass
+
+func generate_raw_content(fact: Dictionary) -> String:
+    # Convert entity-based fact to pipe-delimited string
+    # e.g., "the blacksmith | is located in | the Market District"
+    pass
+```
+
+**Key implementation details:**
+
+- Use `FileAccess.open()` and `JSON.parse_string()` for loading
+- `generate_raw_content()` must look up entity `display` values
+- For `object_literal` facts, use the literal directly as the object portion
+- Store loaded entities in instance variable for `resolve_entity()` lookups
+
+---
+
+### Modify world_knowledge_autoload.gd
+
+Replace `_populate_default_facts()` with:
+
+gdscript
+
+```gdscript
+func _populate_default_facts() -> void:
+    var loader := KnowledgeLoader.new()
+    var result := loader.load_all()
+    
+    _entities = result.entities  # Store for later use
+    
+    for fact in result.facts:
+        knowledge.facts[fact.fact_id] = fact
+```
+
+Add instance variable:
+
+gdscript
+
+```gdscript
+var _entities: Dictionary = {}
+```
+
+Add public accessor:
+
+gdscript
+
+```gdscript
+func get_entity(entity_id: String) -> Dictionary:
+    return _entities.get(entity_id, {})
+
+func resolve_entity(query: String) -> String:
+    # Delegate to loader or implement inline
+    pass
+```
+
+**Do NOT delete the old `_populate_default_facts()` code** - comment it out with a note like `# LEGACY: Replaced by JSON loader` so we can verify parity.
+
+---
+
+### Validation
+
+After implementation, verify:
+
+1. Run `main.tscn` - no errors on startup
+2. Ask "Where is the blacksmith?" - should get same response as before
+3. Ask "Who is the king?" - should work
+4. Check that all 25 facts load (print count in `_ready()`)
+5. Existing `.tres` memory files still work (they reference fact_ids 1-25)
+
+---
+
+### Do NOT Change
+
+- `FactResource` class structure
+- `NPCMemoryResource` class structure
+- `KnowledgeAdapter.query_belief()` logic
+- Any `.tres` files
+
+The goal is drop-in replacement - same data, different source format.

@@ -13,9 +13,20 @@ var character_node: CharacterNodeClass
 @onready var character_label: Label = $VBoxContainer/HeaderContainer/CharacterLabel
 @onready var turn_label: Label = $VBoxContainer/HeaderContainer/TurnLabel
 @onready var debug_panel: RichTextLabel = $VBoxContainer/DebugPanel
+@onready var memory_panel: PanelContainer = %MemoryPanel
+@onready var memory_label: Label = %MemoryLabel
+@onready var memory_filter: LineEdit = %MemoryPanel/MemoryVBox/MemoryControls/MemoryFilter
+@onready var memory_sort: OptionButton = %MemoryPanel/MemoryVBox/MemoryControls/MemorySort
+@onready var memory_sort_ascending: CheckButton = %MemoryPanel/MemoryVBox/MemoryControls/MemoryAscending
+@onready var memory_refresh: Button = %MemoryPanel/MemoryVBox/MemoryControls/MemoryRefresh
+@onready var memory_toggle: CheckButton = %MemoryToggle
+@onready var memory_table: Tree = %MemoryPanel/MemoryVBox/MemoryScroll/MemoryTable
 
 ## Toggle for debug output
 var show_debug: bool = false
+var memory_rows: Array = []
+var memory_sort_key: String = "fact_id"
+var memory_sort_is_ascending: bool = false
 
 
 func _ready() -> void:
@@ -34,10 +45,7 @@ func _ready() -> void:
 	$VBoxContainer/InputContainer/DebugToggle.focus_mode = Control.FOCUS_NONE
 	
 	# Set up character label
-	if character_node:
-		character_label.text = "Talking to: " + character_node.get_character_name()
-		if character_node.profile:
-			character_label.text += " (" + character_node.profile.character_type + ")"
+	_update_character_header()
 	
 	# Initialize turn counter
 	_update_turn_label()
@@ -48,6 +56,8 @@ func _ready() -> void:
 	# Add welcome message
 	_add_system_message("Type a message and press Enter or click Submit.")
 	_add_system_message("Try asking: 'Where is the blacksmith?' or 'Who is the king?'")
+	
+	_setup_memory_panel()
 
 
 func _on_submit_pressed() -> void:
@@ -130,10 +140,10 @@ func _handle_switch_command(args: Array[String]) -> void:
 	
 	var target: String = args[0].to_lower()
 	if target in ["archivist", "archivist-7", "archivist7", "llm"]:
-		get_tree().change_scene_to_file("res://main.tscn")
+		_swap_character_from_scene("res://main.tscn")
 		return
 	if target in ["marcus", "old", "oldmarcus", "old_marcus", "human"]:
-		get_tree().change_scene_to_file("res://human_npc.tscn")
+		_swap_character_from_scene("res://human_npc.tscn")
 		return
 	
 	_add_system_message("Unknown character: %s (try /switch archivist or /switch marcus)" % args[0])
@@ -157,6 +167,43 @@ func _add_system_message(message: String) -> void:
 	output_display.append_text(formatted)
 	_reset_input_state() # Consistently call the same cleanup
 
+
+func _update_character_header() -> void:
+	if character_node and character_label:
+		character_label.text = "Talking to: " + character_node.get_character_name()
+		if character_node.profile:
+			character_label.text += " (" + character_node.profile.character_type + ")"
+
+
+func _swap_character_from_scene(scene_path: String) -> void:
+	if not character_node:
+		_add_system_message("Error: No character node assigned!")
+		return
+	if not WorldKnowledge or not WorldKnowledge.knowledge:
+		_add_system_message("Error: World knowledge not initialized.")
+		return
+	
+	var packed := load(scene_path) as PackedScene
+	if not packed:
+		_add_system_message("Error: Could not load %s" % scene_path)
+		return
+	
+	var scene_root := packed.instantiate()
+	var scene_character := scene_root.get_node_or_null("CharacterNode") as CharacterNodeClass
+	if not scene_character:
+		scene_root.free()
+		_add_system_message("Error: CharacterNode missing in %s" % scene_path)
+		return
+	
+	character_node.profile = scene_character.profile
+	character_node.initial_memory = scene_character.initial_memory
+	character_node.initialize(WorldKnowledge.knowledge)
+	scene_root.free()
+	
+	_update_character_header()
+	_update_turn_label()
+	_refresh_memory_table()
+	_add_system_message("Switched to %s." % character_node.get_character_name())
 
 
 func _update_turn_label() -> void:
@@ -190,3 +237,159 @@ func _input(event: InputEvent) -> void:
 	# Toggle debug with F3
 	if event.is_action_pressed("ui_page_down"):  # Or bind to F3
 		toggle_debug()
+
+
+func _setup_memory_panel() -> void:
+	if not memory_table:
+		return
+	
+	memory_table.columns = 3
+	memory_table.hide_root = true
+	memory_table.column_titles_visible = true
+	memory_table.set_column_title(0, "Fact ID")
+	memory_table.set_column_title(1, "Certainty")
+	memory_table.set_column_title(2, "Raw Content")
+	
+	if memory_sort:
+		memory_sort.clear()
+		memory_sort.add_item("Fact ID")
+		memory_sort.add_item("Certainty")
+		memory_sort.add_item("Raw Content")
+		memory_sort.select(0)
+	
+	if memory_filter:
+		memory_filter.text_changed.connect(_on_memory_filter_changed)
+	if memory_sort:
+		memory_sort.item_selected.connect(_on_memory_sort_changed)
+	if memory_sort_ascending:
+		memory_sort_ascending.toggled.connect(_on_memory_sort_toggled)
+	if memory_refresh:
+		memory_refresh.pressed.connect(_refresh_memory_table)
+	if memory_toggle:
+		memory_toggle.toggled.connect(_on_memory_toggle_toggled)
+	
+	_refresh_memory_table()
+
+
+func _refresh_memory_table() -> void:
+	memory_rows.clear()
+	
+	var memory: NPCMemoryResource = null
+	var npc_name: String = "Unknown"
+	if character_node:
+		npc_name = character_node.get_character_name()
+		if character_node.state and character_node.state.memory:
+			memory = character_node.state.memory
+		elif character_node.initial_memory:
+			memory = character_node.initial_memory
+	
+	if memory_label:
+		memory_label.text = "%s Memory Facts" % npc_name
+	
+	if memory:
+		for fact_id in memory.beliefs.keys():
+			var certainty: float = float(memory.beliefs[fact_id])
+			var fact: FactResource = WorldKnowledge.get_fact(int(fact_id))
+			var raw_content: String = ""
+			if fact:
+				raw_content = fact.raw_content
+			else:
+				raw_content = "<missing fact %s>" % str(fact_id)
+			
+			memory_rows.append({
+				"npc_name": npc_name,
+				"fact_id": int(fact_id),
+				"certainty": certainty,
+				"raw_content": raw_content
+			})
+	
+	_rebuild_memory_table()
+
+
+func _on_memory_filter_changed(_text: String) -> void:
+	_rebuild_memory_table()
+
+
+func _on_memory_sort_changed(index: int) -> void:
+	match index:
+		0:
+			memory_sort_key = "fact_id"
+		1:
+			memory_sort_key = "certainty"
+		2:
+			memory_sort_key = "raw_content"
+		_:
+			memory_sort_key = "fact_id"
+	_rebuild_memory_table()
+
+
+func _on_memory_sort_toggled(pressed: bool) -> void:
+	memory_sort_is_ascending = pressed
+	_rebuild_memory_table()
+
+
+func _on_memory_toggle_toggled(pressed: bool) -> void:
+	if memory_panel:
+		memory_panel.visible = pressed
+
+
+func _rebuild_memory_table() -> void:
+	if not memory_table:
+		return
+	
+	memory_table.clear()
+	var root := memory_table.create_item()
+	
+	var filter_text := ""
+	if memory_filter:
+		filter_text = memory_filter.text.strip_edges().to_lower()
+	
+	var rows := memory_rows.duplicate()
+	rows.sort_custom(Callable(self, "_sort_memory_rows"))
+	
+	for row in rows:
+		if not _memory_row_matches_filter(row, filter_text):
+			continue
+		var item := memory_table.create_item(root)
+		item.set_text(0, str(row["fact_id"]))
+		item.set_text(1, "%0.2f" % row["certainty"])
+		item.set_text(2, row["raw_content"])
+
+
+func _memory_row_matches_filter(row: Dictionary, filter_text: String) -> bool:
+	if filter_text.is_empty():
+		return true
+	
+	if str(row["fact_id"]).find(filter_text) != -1:
+		return true
+	if ("%0.2f" % row["certainty"]).find(filter_text) != -1:
+		return true
+	if row["raw_content"].to_lower().find(filter_text) != -1:
+		return true
+	
+	return false
+
+
+func _sort_memory_rows(a: Dictionary, b: Dictionary) -> bool:
+	var order := 0
+	match memory_sort_key:
+		"fact_id":
+			order = _compare_numeric(a["fact_id"], b["fact_id"])
+		"certainty":
+			order = _compare_numeric(a["certainty"], b["certainty"])
+		"raw_content":
+			order = a["raw_content"].nocasecmp_to(b["raw_content"])
+		_:
+			order = _compare_numeric(a["fact_id"], b["fact_id"])
+	
+	if memory_sort_is_ascending:
+		return order < 0
+	return order > 0
+
+
+func _compare_numeric(a_value: float, b_value: float) -> int:
+	if a_value < b_value:
+		return -1
+	if a_value > b_value:
+		return 1
+	return 0

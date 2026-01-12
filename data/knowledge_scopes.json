@@ -1,0 +1,84 @@
+{
+  "meta": { "version": "1.0" },
+  "scopes": {
+	"common_knowledge": {
+	  "description": "What everyone knows",
+	  "include_access": ["public"],
+	  "exclude_access": ["secret", "self_only"],
+	  "base_strength": 0.7
+	},
+	"local_resident": {
+	  "extends": "common_knowledge",
+	  "description": "Locals know local things",
+	  "include_access": ["public", "local"],
+	  "base_strength": 0.8
+	},
+	"city_watch_veteran": {
+	  "extends": "local_resident",
+	  "description": "Guards know military and law enforcement",
+	  "include_tags": ["guard", "military", "crime"],
+	  "seed_entities": ["captain_of_guard"],
+	  "base_strength": 0.85
+	},
+	"scholar": {
+	  "extends": "common_knowledge",
+	  "description": "Academics know history and lore",
+	  "include_tags": ["history", "lore", "legend", "academy"],
+	  "base_strength": 0.9
+	},
+	"merchant": {
+	  "extends": "local_resident",
+	  "description": "Merchants know trade and economy",
+	  "include_tags": ["trade", "economy", "guild", "merchant", "market"],
+	  "seed_entities": ["merchant_guild", "market_district"],
+	  "base_strength": 0.8
+	},
+	"underground": {
+	  "description": "Criminal knowledge - not inherited",
+	  "include_tags": ["crime", "underground", "thieves"],
+	  "include_access": ["secret"],
+	  "requires_trust_override": 0.0,
+	  "base_strength": 0.75
+	}
+  },
+  "npc_seeds": {
+	"old_marcus": {
+	  "scopes": ["city_watch_veteran"],
+	  "identity_entity": "old_marcus",
+	  "graph_seeds": [
+		{
+		  "entity": "old_marcus",
+		  "depth": 0,
+		  "strength": 1.0,
+		  "include_predicates": ["am"]
+		},
+		{
+		  "entity": "king_aldric",
+		  "depth": 1,
+		  "strength": 0.7,
+		  "exclude_tags": ["secret"]
+		}
+	  ],
+	  "misinformation": {
+		"4": {
+		  "replace_object_literal": "Aldric the Wise",
+		  "strength": 0.8
+		}
+	  }
+	},
+	"archivist_7": {
+	  "scopes": ["scholar"],
+	  "identity_entity": "archivist_7",
+	  "graph_seeds": [
+		{
+		  "entity": "archivist_7",
+		  "depth": 0,
+		  "strength": 1.0,
+		  "include_predicates": ["am"]
+		}
+	  ],
+	  "exclude_tags": ["magic"],
+	  "misinformation": {}
+	}
+  }
+}

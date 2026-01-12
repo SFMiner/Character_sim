@@ -8,6 +8,15 @@ extends Resource
 @export var tags: Array[String] = []
 @export var raw_content: String = ""  # e.g., "blacksmith | located_in | Market District"
 
+# Structured entity references (optional - populated by JSON loader)
+@export var subject_entity: String = ""
+@export var predicate: String = ""
+@export var object_entity: String = ""
+@export var object_literal: String = ""
+@export var access: String = "public"
+@export var requires_trust: float = 0.0
+@export var owner_entity: String = ""
+
 ## EXTENSION POINT: Uncomment when ready to add knowledge gating
 # @export var granularity: int = 0  # 0=summary, 1=general, 2=detailed, 3=expert
 # @export var prerequisites: Array[int] = []  # fact_ids that must be known first

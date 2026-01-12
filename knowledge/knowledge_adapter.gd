@@ -6,10 +6,29 @@ class_name KnowledgeAdapter
 extends RefCounted
 
 var world: WorldKnowledgeResource
+var entities: Dictionary = {}
+var entity_facts_index: Dictionary = {}
 
 
 func _init(world_knowledge: WorldKnowledgeResource) -> void:
 	world = world_knowledge
+	_build_indices()
+
+
+func set_entities(entity_data: Dictionary) -> void:
+	entities = entity_data
+	_build_indices()
+
+
+func _build_indices() -> void:
+	entity_facts_index.clear()
+	for fact_id in world.facts:
+		var fact: FactResource = world.facts[fact_id]
+		var parsed: Array[String] = _parse_fact_entities(fact)
+		for entity_id in parsed:
+			if not entity_facts_index.has(entity_id):
+				entity_facts_index[entity_id] = []
+			entity_facts_index[entity_id].append(fact_id)
 
 
 ## Core query: what does this NPC believe about a subject?
@@ -66,6 +85,75 @@ func query_belief(subject: String, memory: NPCMemoryResource) -> Dictionary:
 
 func _find_facts_by_subject(subject: String) -> Array[FactResource]:
 	var results: Array[FactResource] = []
+	
+	var entity_id := resolve_entity(subject)
+	if not entity_id.is_empty():
+		var fact_ids: Array = entity_facts_index.get(entity_id, [])
+		for fact_id in fact_ids:
+			if world.facts.has(fact_id):
+				results.append(world.facts[fact_id])
+		if not results.is_empty():
+			return results
+	
+	return _find_facts_by_tags(subject)
+
+
+func resolve_entity(query: String) -> String:
+	var search := query.to_lower().strip_edges()
+	if search.is_empty():
+		return ""
+	
+	if entities.has(search):
+		return search
+	
+	for entity_id in entities:
+		var entity: Dictionary = entities[entity_id]
+		if entity.get("display", "").to_lower() == search:
+			return entity_id
+	
+	for entity_id in entities:
+		var entity: Dictionary = entities[entity_id]
+		var aliases: Array = entity.get("aliases", [])
+		for alias in aliases:
+			if alias.to_lower() == search:
+				return entity_id
+	
+	for entity_id in entities:
+		var entity: Dictionary = entities[entity_id]
+		if search in entity.get("display", "").to_lower():
+			return entity_id
+	
+	return ""
+
+
+func _parse_fact_entities(fact: FactResource) -> Array[String]:
+	var found: Array[String] = []
+	
+	if not fact.subject_entity.is_empty():
+		found.append(fact.subject_entity)
+	if not fact.object_entity.is_empty():
+		found.append(fact.object_entity)
+	
+	if not found.is_empty():
+		return found
+	
+	var content := fact.raw_content.to_lower()
+	for entity_id in entities:
+		var entity: Dictionary = entities[entity_id]
+		var display : String = entity.get("display", "").to_lower()
+		if display.length() >= 3 and display in content:
+			found.append(entity_id)
+			continue
+		for alias in entity.get("aliases", []):
+			if alias.to_lower() in content:
+				if entity_id not in found:
+					found.append(entity_id)
+	
+	return found
+
+
+func _find_facts_by_tags(subject: String) -> Array[FactResource]:
+	var results: Array[FactResource] = []
 	var search_term: String = subject.to_lower()
 	
 	for fact_id in world.facts:
@@ -111,8 +199,14 @@ func _fuzzy_match(query: String, target: String, max_distance: int = 2) -> bool:
 	
 	# For short words, require closer match
 	var min_len: int = min(query.length(), target.length())
-	if min_len <= 3:
+	if min_len <= 5:
 		max_distance = 1
+	else:
+		# Require same start/end when allowing wider matches
+		if query[0] != target[0]:
+			return false
+		if query[query.length() - 1] != target[target.length() - 1]:
+			return false
 	
 	# Levenshtein distance for typo tolerance
 	var distance: int = _levenshtein_distance(query, target)

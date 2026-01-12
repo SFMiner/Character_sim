@@ -1,0 +1,181 @@
+{
+  "meta": { "version": "1.0" },
+  "entities": {
+	"blacksmith": {
+	  "type": "person",
+	  "subtype": "occupation",
+	  "display": "the blacksmith",
+	  "aliases": ["blacksmith", "smith", "forge", "blacksmith shop"]
+	},
+	"market_district": {
+	  "type": "location",
+	  "display": "the Market District",
+	  "aliases": ["market district", "market"]
+	},
+	"rusty_sword_tavern": {
+	  "type": "location",
+	  "display": "The Rusty Sword tavern",
+	  "aliases": ["rusty sword", "tavern"]
+	},
+	"city_gates": {
+	  "type": "location",
+	  "display": "the city gates",
+	  "aliases": ["gates", "city gates"]
+	},
+	"temple_of_dawn": {
+	  "type": "location",
+	  "display": "the Temple of Dawn",
+	  "aliases": ["temple of dawn", "temple"]
+	},
+	"eastern_hill": {
+	  "type": "location",
+	  "display": "the eastern hill",
+	  "aliases": ["eastern hill", "hill"]
+	},
+	"king_aldric": {
+	  "type": "person",
+	  "display": "the King",
+	  "aliases": ["king", "aldric", "aldric iii"]
+	},
+	"captain_of_guard": {
+	  "type": "person",
+	  "display": "the Captain of the Guard",
+	  "aliases": ["captain", "captain of the guard", "guard captain"]
+	},
+	"helena_ironhand": {
+	  "type": "person",
+	  "display": "Helena Ironhand",
+	  "aliases": ["helena", "ironhand"]
+	},
+	"merchant_guild": {
+	  "type": "organization",
+	  "display": "the Merchant Guild",
+	  "aliases": ["merchant guild", "guild"]
+	},
+	"master_tobias": {
+	  "type": "person",
+	  "display": "Master Tobias",
+	  "aliases": ["tobias"]
+	},
+	"great_war": {
+	  "type": "event",
+	  "display": "The Great War",
+	  "aliases": ["great war", "war"]
+	},
+	"last_dragon": {
+	  "type": "creature",
+	  "display": "the last dragon",
+	  "aliases": ["dragon"]
+	},
+	"first_king": {
+	  "type": "person",
+	  "display": "the First King",
+	  "aliases": ["first king"]
+	},
+	"whispering_woods": {
+	  "type": "location",
+	  "display": "the Whispering Woods",
+	  "aliases": ["whispering woods", "woods"]
+	},
+	"city": {
+	  "type": "location",
+	  "display": "the city",
+	  "aliases": ["city"]
+	},
+	"gold_crowns": {
+	  "type": "object",
+	  "display": "Gold Crowns",
+	  "aliases": ["gold crowns", "currency", "gold"]
+	},
+	"deep_iron_mine": {
+	  "type": "location",
+	  "display": "the Deep-Iron Mine",
+	  "aliases": ["deep-iron mine", "iron mine"]
+	},
+	"archmage_thalric": {
+	  "type": "person",
+	  "display": "Archmage Thalric",
+	  "aliases": ["archmage", "thalric"]
+	},
+	"academy_unseen_arts": {
+	  "type": "organization",
+	  "display": "the Academy of Unseen Arts",
+	  "aliases": ["academy", "academy of unseen arts"]
+	},
+	"thieves_guild": {
+	  "type": "organization",
+	  "display": "the Thieves Guild",
+	  "aliases": ["thieves guild"]
+	},
+	"sewers_beneath_fountain": {
+	  "type": "location",
+	  "display": "the sewers beneath the fountain",
+	  "aliases": ["sewers", "fountain sewers"]
+	},
+	"moon_shard": {
+	  "type": "object",
+	  "display": "the Moon Shard",
+	  "aliases": ["moon shard", "shard"]
+	},
+	"kings_private_vault": {
+	  "type": "location",
+	  "display": "the King's private vault",
+	  "aliases": ["king's vault", "private vault"]
+	},
+	"goblin_scouts": {
+	  "type": "creature",
+	  "display": "Goblin scouts",
+	  "aliases": ["goblins", "goblin scouts"]
+	},
+	"western_farms": {
+	  "type": "location",
+	  "display": "the western farms",
+	  "aliases": ["western farms", "farms"]
+	},
+	"village": {
+	  "type": "location",
+	  "display": "The village",
+	  "aliases": ["village"]
+	},
+	"river": {
+	  "type": "location",
+	  "display": "The river",
+	  "aliases": ["river"]
+	},
+	"main_road": {
+	  "type": "location",
+	  "display": "The main road",
+	  "aliases": ["main road", "road"]
+	},
+	"north_end_village": {
+	  "type": "location",
+	  "display": "the north end of the village",
+	  "aliases": ["north end", "north end of the village"]
+	},
+	"north_end_fire": {
+	  "type": "event",
+	  "display": "A fire",
+	  "aliases": ["fire"]
+	},
+	"guests": {
+	  "type": "concept",
+	  "display": "Guests",
+	  "aliases": ["guests"]
+	},
+	"elders": {
+	  "type": "person",
+	  "display": "Elders",
+	  "aliases": ["elders"]
+	},
+	"archivist_7": {
+	  "type": "person",
+	  "display": "I",
+	  "aliases": ["archivist-7", "archivist", "archivist 7"]
+	},
+	"old_marcus": {
+	  "type": "person",
+	  "display": "I",
+	  "aliases": ["old marcus", "marcus"]
+	}
+  }
+}

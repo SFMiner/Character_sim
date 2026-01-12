@@ -142,6 +142,16 @@ Click the "Debug" button to see:
 - Knowledge lookup results
 - Decision made
 
+## NPC Memory Viewer
+
+Both scenes include a memory panel that lets you inspect NPC belief resources:
+- Toggle it with the "Show" button in the header.
+- Filter by NPC name, fact id, certainty, or raw content.
+- Sort by NPC, fact id, certainty, or raw content (ascending or descending).
+- Use "Refresh" if you edit memory resources while the game is running.
+
+The panel aggregates every `knowledge/npc_memory_*.tres` file and maps belief IDs to the `WorldKnowledge` raw facts.
+
 ## Sample Facts in World Knowledge
 
 | ID | Tags | Content |

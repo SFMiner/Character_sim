@@ -16,6 +16,11 @@ extends Resource
 ## Used for lazy decay calculations
 @export var last_accessed: Dictionary = {}
 
+## fact_id (int) -> source_info (Dictionary)
+## source_info = {type: SourceType, source_id: String, generation: int,
+##                learned_at: float, reinforcements: int}
+@export var sources: Dictionary = {}
+
 ## EXTENSION POINT: Uncomment when ready for hearsay chains
 # @export var source_trust: Dictionary = {}  # fact_id -> source_id (String)
 # @export var generation: Dictionary = {}    # fact_id -> hearsay_depth (int)

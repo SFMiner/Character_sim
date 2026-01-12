@@ -89,7 +89,16 @@ func _extract_subject(text: String) -> String:
 	# Try to extract the main subject from the query
 	
 	# Pattern: "where is the X", "where is X"
-	var where_patterns: Array[String] = ["where is the ", "where is ", "where can i find the ", "where can i find "]
+	var where_patterns: Array[String] = [
+		"where is the ",
+		"where is ",
+		"where are the ",
+		"where are ",
+		"where were the ",
+		"where were ",
+		"where can i find the ",
+		"where can i find "
+	]
 	for pattern in where_patterns:
 		var idx: int = text.find(pattern)
 		if idx >= 0:
@@ -107,6 +116,14 @@ func _extract_subject(text: String) -> String:
 	# Pattern: "what is the X", "what is X"
 	var what_patterns: Array[String] = ["what is the ", "what is ", "what's the ", "what's "]
 	for pattern in what_patterns:
+		var idx: int = text.find(pattern)
+		if idx >= 0:
+			var remainder: String = text.substr(idx + pattern.length())
+			return _extract_noun_phrase(remainder)
+
+	# Pattern: "when did/was/is/does the X (end/start/etc.)"
+	var when_patterns: Array[String] = ["when did the ", "when did ", "when was the ", "when was ", "when is the ", "when is ", "when does the ", "when does "]
+	for pattern in when_patterns:
 		var idx: int = text.find(pattern)
 		if idx >= 0:
 			var remainder: String = text.substr(idx + pattern.length())

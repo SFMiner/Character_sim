@@ -66,6 +66,54 @@ bbcode_enabled = true
 scroll_following = true
 selection_enabled = true
 
+[node name="MemoryPanel" type="PanelContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 220)
+layout_mode = 2
+
+[node name="MemoryVBox" type="VBoxContainer" parent="VBoxContainer/MemoryPanel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="MemoryLabel" type="Label" parent="VBoxContainer/MemoryPanel/MemoryVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "NPC Memory Facts"
+
+[node name="MemoryControls" type="HBoxContainer" parent="VBoxContainer/MemoryPanel/MemoryVBox"]
+layout_mode = 2
+
+[node name="MemoryFilter" type="LineEdit" parent="VBoxContainer/MemoryPanel/MemoryVBox/MemoryControls"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Filter by NPC, fact id, certainty, or text..."
+
+[node name="MemorySort" type="OptionButton" parent="VBoxContainer/MemoryPanel/MemoryVBox/MemoryControls"]
+layout_mode = 2
+
+[node name="MemoryAscending" type="CheckButton" parent="VBoxContainer/MemoryPanel/MemoryVBox/MemoryControls"]
+layout_mode = 2
+text = "Ascending"
+
+[node name="MemoryRefresh" type="Button" parent="VBoxContainer/MemoryPanel/MemoryVBox/MemoryControls"]
+layout_mode = 2
+text = "Refresh"
+
+[node name="MemoryToggle" type="CheckButton" parent="VBoxContainer/MemoryPanel/MemoryVBox/MemoryControls"]
+layout_mode = 2
+button_pressed = true
+text = "Show"
+
+[node name="MemoryScroll" type="ScrollContainer" parent="VBoxContainer/MemoryPanel/MemoryVBox"]
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MemoryTable" type="Tree" parent="VBoxContainer/MemoryPanel/MemoryVBox/MemoryScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 4
+
 [node name="DebugPanel" type="RichTextLabel" parent="VBoxContainer"]
 visible = false
 custom_minimum_size = Vector2(0, 120)

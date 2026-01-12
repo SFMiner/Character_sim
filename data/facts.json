@@ -1,0 +1,233 @@
+{
+  "meta": { "version": "1.0" },
+  "predicates": {
+    "is_located_in": { "domain": ["person", "location", "organization"], "range": ["location"] },
+    "stands_near": { "domain": ["location", "organization"], "range": ["location"] },
+    "overlooks": { "domain": ["location"], "range": ["_literal"] },
+    "is_named": { "domain": ["person", "organization"], "range": ["_literal"] },
+    "is": { "domain": ["person", "organization"], "range": ["person", "_literal"] },
+    "is_led_by": { "domain": ["organization"], "range": ["person"] },
+    "ended": { "domain": ["event"], "range": ["_literal"] },
+    "was_slain_by": { "domain": ["creature"], "range": ["person"] },
+    "suffers_from": { "domain": ["person"], "range": ["_literal"] },
+    "lie_to": { "domain": ["location"], "range": ["_literal"] },
+    "are": { "domain": ["object", "concept"], "range": ["_literal"] },
+    "produces": { "domain": ["location", "organization"], "range": ["_literal"] },
+    "leads": { "domain": ["person"], "range": ["organization"] },
+    "distrusts": { "domain": ["organization", "location"], "range": ["organization"] },
+    "meets_in": { "domain": ["organization"], "range": ["location"] },
+    "is_hidden_within": { "domain": ["object"], "range": ["location"] },
+    "have_been_spotted_near": { "domain": ["creature"], "range": ["location"] },
+    "stands_where": { "domain": ["location"], "range": ["_literal"] },
+    "changes_its_course": { "domain": ["location"], "range": ["_literal"] },
+    "is_older_than": { "domain": ["location"], "range": ["_literal"] },
+    "once_destroyed": { "domain": ["event"], "range": ["location"] },
+    "are_fed_before": { "domain": ["concept"], "range": ["_literal"] },
+    "are_valued_for": { "domain": ["person", "concept"], "range": ["_literal"] },
+    "am": { "domain": ["person"], "range": ["_literal"] }
+  },
+  "facts": {
+    "1": {
+      "subject": "blacksmith",
+      "predicate": "is_located_in",
+      "object": "market_district",
+      "tags": ["location", "blacksmith", "trade", "market"],
+      "access": "public",
+      "requires_trust": 0.0
+    },
+    "2": {
+      "subject": "rusty_sword_tavern",
+      "predicate": "stands_near",
+      "object": "city_gates",
+      "tags": ["location", "tavern", "social", "gates"],
+      "access": "public",
+      "requires_trust": 0.0
+    },
+    "3": {
+      "subject": "temple_of_dawn",
+      "predicate": "overlooks",
+      "object_literal": "the city from the eastern hill",
+      "tags": ["location", "temple", "religious", "hill"],
+      "access": "public",
+      "requires_trust": 0.0
+    },
+    "4": {
+      "subject": "king_aldric",
+      "predicate": "is_named",
+      "object_literal": "Aldric III",
+      "tags": ["person", "king", "royalty", "politics"],
+      "access": "public",
+      "requires_trust": 0.0
+    },
+    "5": {
+      "subject": "captain_of_guard",
+      "predicate": "is",
+      "object": "helena_ironhand",
+      "tags": ["person", "captain", "guard", "military"],
+      "access": "public",
+      "requires_trust": 0.0
+    },
+    "6": {
+      "subject": "merchant_guild",
+      "predicate": "is_led_by",
+      "object": "master_tobias",
+      "tags": ["person", "merchant", "guild", "trade"],
+      "access": "public",
+      "requires_trust": 0.0
+    },
+    "7": {
+      "subject": "great_war",
+      "predicate": "ended",
+      "object_literal": "one hundred years ago",
+      "tags": ["history", "war", "lore", "past"],
+      "access": "public",
+      "requires_trust": 0.0
+    },
+    "8": {
+      "subject": "last_dragon",
+      "predicate": "was_slain_by",
+      "object": "first_king",
+      "tags": ["legend", "dragon", "lore", "magic"],
+      "access": "public",
+      "requires_trust": 0.0
+    },
+    "9": {
+      "subject": "king_aldric",
+      "predicate": "suffers_from",
+      "object_literal": "a wasting sickness",
+      "tags": ["secret", "king", "illness", "politics"],
+      "access": "secret",
+      "requires_trust": 0.0
+    },
+    "10": {
+      "subject": "old_marcus",
+      "predicate": "am",
+      "object_literal": "Old Marcus, a veteran of the city watch",
+      "tags": ["identity", "self", "old marcus", "marcus", "person"],
+      "access": "self_only",
+      "requires_trust": 0.0,
+      "owner": "old_marcus"
+    },
+    "11": {
+      "subject": "archivist_7",
+      "predicate": "am",
+      "object_literal": "Archivist-7, a knowledge repository system",
+      "tags": ["identity", "self", "archivist-7", "archivist", "person"],
+      "access": "self_only",
+      "requires_trust": 0.0,
+      "owner": "archivist_7"
+    },
+    "12": {
+      "subject": "whispering_woods",
+      "predicate": "lie_to",
+      "object_literal": "the north of the city",
+      "tags": ["location", "geography", "north", "forest"],
+      "access": "public",
+      "requires_trust": 0.0
+    },
+    "13": {
+      "subject": "gold_crowns",
+      "predicate": "are",
+      "object_literal": "the official currency of the realm",
+      "tags": ["economy", "trade", "gold", "market"],
+      "access": "public",
+      "requires_trust": 0.0
+    },
+    "14": {
+      "subject": "deep_iron_mine",
+      "predicate": "produces",
+      "object_literal": "most of the city's metal",
+      "tags": ["location", "resource", "industrial", "mountains"],
+      "access": "public",
+      "requires_trust": 0.0
+    },
+    "15": {
+      "subject": "archmage_thalric",
+      "predicate": "leads",
+      "object": "academy_unseen_arts",
+      "tags": ["person", "wizard", "academy", "magic"],
+      "access": "public",
+      "requires_trust": 0.0
+    },
+    "16": {
+      "subject": "temple_of_dawn",
+      "predicate": "distrusts",
+      "object": "academy_unseen_arts",
+      "tags": ["politics", "conflict", "temple", "academy"],
+      "access": "public",
+      "requires_trust": 0.0
+    },
+    "17": {
+      "subject": "thieves_guild",
+      "predicate": "meets_in",
+      "object": "sewers_beneath_fountain",
+      "tags": ["secret", "thieves", "underground", "crime"],
+      "access": "secret",
+      "requires_trust": 0.0
+    },
+    "18": {
+      "subject": "moon_shard",
+      "predicate": "is_hidden_within",
+      "object": "kings_private_vault",
+      "tags": ["lore", "artifact", "forbidden", "magic"],
+      "access": "public",
+      "requires_trust": 0.0
+    },
+    "19": {
+      "subject": "goblin_scouts",
+      "predicate": "have_been_spotted_near",
+      "object": "western_farms",
+      "tags": ["rumor", "danger", "goblins", "war"],
+      "access": "rumor",
+      "requires_trust": 0.0
+    },
+    "20": {
+      "subject": "village",
+      "predicate": "stands_where",
+      "object_literal": "marsh hardens into usable ground",
+      "tags": ["village", "geography", "local"],
+      "access": "local",
+      "requires_trust": 0.0
+    },
+    "21": {
+      "subject": "river",
+      "predicate": "changes_its_course",
+      "object_literal": "after hard winters",
+      "tags": ["river", "geography", "local"],
+      "access": "local",
+      "requires_trust": 0.0
+    },
+    "22": {
+      "subject": "main_road",
+      "predicate": "is_older_than",
+      "object_literal": "the village itself",
+      "tags": ["road", "history", "local"],
+      "access": "local",
+      "requires_trust": 0.0
+    },
+    "23": {
+      "subject": "north_end_fire",
+      "predicate": "once_destroyed",
+      "object": "north_end_village",
+      "tags": ["history", "village", "disaster"],
+      "access": "public",
+      "requires_trust": 0.0
+    },
+    "24": {
+      "subject": "guests",
+      "predicate": "are_fed_before",
+      "object_literal": "they are questioned",
+      "tags": ["custom", "hospitality", "social"],
+      "access": "public",
+      "requires_trust": 0.0
+    },
+    "25": {
+      "subject": "elders",
+      "predicate": "are_valued_for",
+      "object_literal": "memory rather than authority",
+      "tags": ["elders", "custom", "authority"],
+      "access": "public",
+      "requires_trust": 0.0
+    }
+  }
+}

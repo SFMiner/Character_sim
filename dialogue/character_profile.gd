@@ -23,11 +23,13 @@ extends Resource
 ## Skeleton IDs this character prefers (weighted higher in selection)
 @export var preferred_skeletons: Array[String] = []
 
+## Learning traits
+@export var curiosity: float = 0.5  # 0.0 to 1.0, affects learning rate
+
 ## EXTENSION POINT: Personality traits (add when boring)
 # @export var warmth: float = 0.0           # -1 to 1, affects friendliness
 # @export var assertiveness: float = 0.0    # -1 to 1, affects directness
 # @export var conscientiousness: float = 0.0 # -1 to 1, affects precision
-# @export var curiosity: float = 0.0        # -1 to 1, affects engagement
 # @export var risk_tolerance: float = 0.0   # -1 to 1, affects caution
 # @export var stability: float = 0.0        # -1 to 1, affects consistency
 # @export var values: Dictionary = {}       # value_name -> weight (float)

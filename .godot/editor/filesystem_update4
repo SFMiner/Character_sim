@@ -1,0 +1,16 @@
+res://ui/dialogue_ui.gd
+res://main.tscn
+res://dialogue/speech_act_interpreter.gd
+res://knowledge/knowledge_adapter.gd
+res://Graph_Knowledge_storage_Phase_1A .txt
+res://human_npc.tscn
+res://dialogue/character_node.gd
+res://dialogue/character_profile.gd
+res://knowledge/npc_memory_resource.gd
+res://phase 2B and 2C.md
+res://knowledge/fact_resource.gd
+res://dialogue/dialogue_manager.gd
+res://knowledge/world_knowledge_autoload.gd
+res://knowledge/knowledge_loader.gd
+res://data/entities.json
+res://data/knowledge_scopes.json
